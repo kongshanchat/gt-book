@@ -1,0 +1,129 @@
+	html {
+				font-size: 20px;
+			}
+			
+			body {
+				background: #F1F1F1;
+				font-size: .8rem;
+			}
+			
+			li {
+				list-style: none;
+			}
+			
+			a {
+				color: #222;
+			}
+			
+			.lunbo {
+				height: 12rem;
+				width: 100%;
+				background: pink;
+			}
+			
+			.swiper-container img {
+				height: 12rem;
+				display: block;
+				width: 100%;
+			}
+			
+			.swiper-icon {
+				padding: 1.5rem 0;
+				position: relative;
+			}
+			
+			.sort{
+				overflow: hidden;
+			}
+			
+			.sort-1 {
+				background: white;
+			}
+			
+			.swiper-icon li {
+				list-style: none;
+				float: left;
+				text-align: center;
+				width: 25%;
+			}
+			
+			.sort-icon-title {
+				display: block;
+			}
+			
+			.weui-cells {
+				margin-top: 0.5rem;
+			}
+			
+			.sort-2 {
+				background: white;
+			}
+			
+			.sort-2 a {
+				display: block;
+			}
+			
+			.sort-2 ul {
+				overflow: hidden;
+			}
+			
+			.sort-2 ul li {
+				overflow: hidden;
+				padding: .5rem;
+				height:5rem;
+				border-bottom: 1px solid #ddd;
+			}
+			
+			.bookface {
+				float: left;
+				margin-right: 2%;
+				width: 20%;
+			}
+			
+			.bookface img {
+				width: 100%;
+				height: 5rem;
+			}
+			
+			.book-text {
+				width: 78%;
+				float: left;
+			}
+			
+			.book-text h3 {
+				height: 1.5rem;
+				line-height: 1.5rem;
+				font-family: "微软雅黑";
+				font-weight: normal;
+				font-size: .8rem;
+				width: 100%;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.book-text p {
+				font-size: .7rem;
+				color: gray;
+			}
+			
+			.book-text img {
+				width: .8rem;
+				height: .8rem;
+				vertical-align: sub;
+			}
+			
+			.book-info {
+				height: 2.5rem;
+				line-height: 1.2rem;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+			}
+			
+			.book-price {
+				height: 1rem;
+				line-height: 1rem;
+			}

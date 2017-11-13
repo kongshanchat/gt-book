@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>bookmall</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<meta name="description" content=" ">
+		<link rel="stylesheet" href="lib/weui.min.css">
+		<link rel="stylesheet" href="css/jquery-weui.css">
+		<link rel="stylesheet" href="css/book.css" />
+	</head>
+
+	<body ontouchstart>
+		<div class="swiper-container lunbo">
+			<!-- Additional required wrapper -->
+			<div class="swiper-wrapper">
+
+			</div>
+
+			<!-- If we need pagination -->
+			<div class="swiper-pagination"></div>
+		</div>
+
+		<div class="sort">
+			<div class="sort-title">
+				<div class="weui-cells weui-cell_access">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<p>推荐分类</p>
+						</div>
+						<div class="weui-cell__ft">全部分类</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="sort-1">
+				<div class="swiper-icon">
+					<div class="swiper-wrapper">
+					</div>
+					<div class="swiper-pagination"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="sort">
+			<div class="sort-title">
+				<div class="weui-cells weui-cell_access">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<p>热门推荐</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="sort-2">
+				<ul>
+
+					<div class="weui-loadmore" jiazai="1">
+						<i class="weui-loading"></i>
+						<span class="weui-loadmore__tips">正在加载</span>
+					</div>
+
+				</ul>
+
+			</div>
+		</div>
+
+		<script src="lib/jquery-2.1.4.js"></script>
+		<script src="https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js"></script>
+		<script src="lib/fastclick.js"></script>
+		<script src="js/swiper.js"></script>
+		<script>
+			$(function() {
+				FastClick.attach(document.body);
+			});
+			//注入子选项
+			function cal() {
+				var total = 12;
+				var num = 2;
+				var cell_num = 8;
+				var html = "";
+				for(var i = 1; i <= num; i++) {
+					var max = i * cell_num;
+					html += '<div class="swiper-slide"><div class="sort-box"><ul>';
+					for(j = 1; j <= total; j++) {
+						if(j <= max - (i - 1) * total) {
+							html += '<li><img src="img/money.png"><span class="sort-icon-title">化工</span></li>';
+						}
+					}
+
+					html += "</ul></div></div>";
+				}
+				$('.swiper-icon .swiper-wrapper').append(html)
+
+			}
+			cal();
+
+			var swiper = new Swiper('.swiper-icon', {
+				pagination: '.swiper-pagination',
+				paginationClickable: true
+			});
+		</script>
+
+		<script src="js/jquery-weui.js"></script>
+
+		<script>
+			var pages = 1;
+			var sb = 1;
+			var loading = false;
+
+			$(document.body).infinite().on("infinite", function() {
+				if(loading) return;
+				loading = true;
+				sb++;
+				//分页触底 停止上拉加载
+				if($('.weui-loadmore').attr('jiazai') == 0) {
+					return false;
+				}
+
+				$.ajax({
+					crossOrigin: true,
+					async: false,
+					type: 'GET',
+					//每下拉请求一次 url请求的分页+1； 
+					url: 'https://app.hg707.com/index.php?s=/Api2/book/search&hot=1&page=' + sb,
+					dataType: 'json',
+					success: function(e) {
+						alert(sb);
+						alert(e.data.length);
+						var html = "";
+						//当数据加载完即页面的内容为空（length为0），加载消失
+						if(e.data.length == 0) {
+							$('.weui-loadmore__tips').text('已经到底了哟！');
+							$('.weui-loading').hide();
+							$('.weui-loadmore').attr('jiazai', 0);
+							return false;
+						}
+						//从数据中遍历
+						$.each(e.data, function(a, b) {
+							html += '<li><a href="#">';
+							html += '<div class="bookface">';
+							html += '<img class="lazy" data-original="' + b.cover[0].img_url + '">';
+							html += '</div>';
+							html += '<div class="book-text">';
+							html += '<h3>' + b.name + '</h3>';
+							html += '<p class="book-info">' + b.summary + '</p>';
+							html += '<p class="book-price"><img src="img/money.png"> <span>' + b.price + '</span></p>';
+							html += '</div>';
+							html += '</a>';
+							html += '</li>';
+						})
+
+						loading = false;
+						//页面懒加载
+						$(html).insertBefore('.weui-loadmore');
+						$("img.lazy").lazyload({
+							placeholder: "img/chou.png",
+							threshold: 200,
+							event: 'scroll',
+							//failurelimit : 10 ,
+							effect: "fadeIn"
+						});
+
+					}
+				})
+
+			});
+
+			$(function() {
+				//ajax请求轮播图片
+				$.ajax({
+					crossOrigin: true,
+					async: false,
+					type: 'GET',
+					url: 'https://app.hg707.com/index.php?s=/Api2/book/banner&',
+					dataType:'json',
+					success: function(data) {
+						var html = "";
+						$.each(data.data, function(a, b) {
+							html += '<div class="swiper-slide"><img src="' + b.cover[0].img_url + '"/></div>';
+						})
+
+						$('.lunbo .swiper-wrapper').append(html)
+					}
+				})
+
+				$(".swiper-container").swiper({
+					loop: true,
+					autoplay: 3000
+				});
+
+				//在未下拉加载时候，默认加载的第一页内容
+				$.ajax({
+					crossOrigin: true,
+					async: false,
+					type: 'GET',
+					url: 'https://app.hg707.com/index.php?s=/Api2/book/search&hot=1&page=1',
+					dataType: 'json',
+					success: function(e) {
+						console.log(e.data)
+						var html = "";
+
+						$.each(e.data, function(a, b) {
+								console.log(b)
+							html += '<li><a href="#">';
+							html += '<div class="bookface">';
+							html += '<img class="lazy" data-original="' + b.cover[0].img_url + '">';
+							html += '</div>';
+							html += '<div class="book-text">';
+							html += '<h3>' + b.name + '</h3>';
+							html += '<p class="book-info">' + b.summary + '</p>';
+							html += '<p class="book-price"><img src="img/money.png"> <span>' + b.price + '</span></p>';
+							html += '</div>';
+							html += '</a>';
+							html += '</li>';
+						})
+
+						$(html).insertBefore('.weui-loadmore');
+					}
+				})
+
+				$("img.lazy").lazyload({
+					placeholder: "img/chou.png",
+					threshold: 200,
+					event: 'scroll',
+					//failurelimit : 10 ,
+					effect: "fadeIn"
+				});
+
+			})
+		</script>
+	</body>
+
+</html>
